@@ -1,0 +1,195 @@
+POST
+-================-================-================-================-================
+mutation {
+  createProduct(input: {name: "KMK", description: "DESC", price: 100, stores: [{store: "CKP"}, {store: "CBSA"}]}) {
+    name
+    id
+    stores {
+      store
+    }
+  }
+}
+
+output-> 
+{
+  "data": {
+    "createProduct": {
+      "name": "KMK",
+      "id": "28e3ae20198c4b2f9969",
+      "stores": [
+        {
+          "store": "CKP"
+        },
+        {
+          "store": "CBSA"
+        }
+      ]
+    }
+  }
+}
+-================-================-================-================-================
+mutation {
+  updateProduct(input: {
+    id:"632054b18063af705fc5aff7"
+    soldout:SOLD,
+    price: 250, 
+    stores: [
+      {store: "ROU"},
+      {store: "CBSA"}
+    ]
+  }) {
+    soldout price stores {
+      store
+    }
+  }
+}
+output-
+{
+  "data": {
+    "updateProduct": {
+      "soldout": "SOLD",
+      "price": 250,
+      "stores": [
+        {
+          "store": "ROU"
+        },
+        {
+          "store": "CBSA"
+        }
+      ]
+    }
+  }
+}
+-================-================-================-================-================
+mutation {
+  deleteProduct(id: "632054ba8063af705fc5aff9")
+}
+
+output-
+{
+  "data": {
+    "deleteProduct": "Successfully deleted 632054ba8063af705fc5aff9"
+  }
+}
+
+-================-================-================-================-================
+QUERY (GET)
+-================-================-================-================-================
+query{
+  getProduct(id: "632054b18063af705fc5aff7") {
+    id
+    name
+    description
+    stores {
+      store
+    }
+  }
+}
+
+output-
+{
+  "data": {
+    "getProduct": {
+      "id": "632054b18063af705fc5aff7",
+      "name": "KMK",
+      "description": "DESC",
+      "stores": [
+        {
+          "store": "CKP"
+        },
+        {
+          "store": "CBSA"
+        }
+      ]
+    }
+  }
+}
+-================-================-================-================-================
+query{
+  getAllProduct {
+    id name 
+  }
+}
+output-
+{
+  "data": {
+    "getAllProduct": [
+      {
+        "id": "632054b18063af705fc5aff7",
+        "name": "KMK"
+      },
+      {
+        "id": "632054ba8063af705fc5aff9",
+        "name": "KMK"
+      },
+      {
+        "id": "6320679814230997d9e6c7c1",
+        "name": "KMK1"
+      }
+    ]
+  }
+}
+-================-================-================-================-================
+ALIASES to get data of multiple endpoints together
+
+query{
+  price: getProduct(id: "632054b18063af705fc5aff7") {
+    name
+    price
+  }
+  description: getProduct(id: "6320679814230997d9e6c7c1") {
+    name
+    description
+  }
+}
+output-
+{
+  "data": {
+    "price": {
+      "name": "KMK",
+      "price": 250
+    },
+    "description": {
+      "name": "KMK1",
+      "description": "DESC"
+    }
+  }
+}
+-================-================-================-================-================
+FRAGMENT on GRaphQL
+
+query{
+  widget1: getProduct(id: "632054b18063af705fc5aff7") {
+    ...widgetFragment
+  }
+  widget2: getProduct(id: "6320679814230997d9e6c7c1") {
+   ...widgetFragment
+  }
+}
+
+fragment widgetFragment on Product{
+  id name price description soldout
+}
+
+output-
+{
+  "data": {
+    "widget1": {
+      "id": "632054b18063af705fc5aff7",
+      "name": "KMK",
+      "price": 250,
+      "description": "DESC",
+      "soldout": "SOLD"
+    },
+    "widget2": {
+      "id": "6320679814230997d9e6c7c1",
+      "name": "KMK1",
+      "price": 200,
+      "description": "DESC",
+      "soldout": "ONSALE"
+    }
+  }
+}
+
+
+-================-================-================-================-================
